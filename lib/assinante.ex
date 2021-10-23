@@ -3,10 +3,23 @@ defmodule Assinante do
 
   @assinantes %{:prepago => "pre.txt", :pospago => "pos.txt"}
 
+  def buscar_assinante(numero) do
+    (read(:prepago) ++ read(:pospago))
+    |> Enum.find(fn assinante -> assinante.numero == numero end)
+  end
+
   def cadastrar(nome, numero, cpf, plano \\ :prepago) do
-    (read(plano) ++ [%__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}])
-    |> :erlang.term_to_binary()
-    |> write(plano)
+    case buscar_assinante(numero) do
+      nil ->
+        (read(plano) ++ [%__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}])
+        |> :erlang.term_to_binary()
+        |> write(plano)
+
+        {:ok, "Assinante #{nome} cadastrado com sucesso!"}
+
+      _assinante ->
+        {:error, "Assinante ja existe!"}
+    end
   end
 
   defp write(lista_de_assinantes, plano) do
