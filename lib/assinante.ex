@@ -3,10 +3,25 @@ defmodule Assinante do
 
   @assinantes %{:prepago => "pre.txt", :pospago => "pos.txt"}
 
-  def buscar_assinante(numero) do
-    (read(:prepago) ++ read(:pospago))
-    |> Enum.find(fn assinante -> assinante.numero == numero end)
+  def buscar_assinante(numero, key \\ :all) do
+    buscar(numero, key)
   end
+
+  defp buscar(numero, :all) do
+    Enum.find(assinantes(), &(&1.numero == numero))
+  end
+
+  defp buscar(numero, :prepago) do
+    Enum.find(assinantes_prepago(), &(&1.numero == numero))
+  end
+
+  defp buscar(numero, :pospago) do
+    Enum.find(assinantes_pospago(), &(&1.numero == numero))
+  end
+
+  def assinantes_prepago(), do: read(:prepago)
+  def assinantes_pospago(), do: read(:pospago)
+  def assinantes(), do: assinantes_prepago() ++ assinantes_pospago()
 
   def cadastrar(nome, numero, cpf, plano \\ :prepago) do
     case buscar_assinante(numero) do
