@@ -1,7 +1,27 @@
 defmodule Assinante do
+  @moduledoc """
+  Modulo de assinante para cadastro com planos `prepago` e `pospago`
+
+  A funcao mais usada eh a `cadastrar/4`
+  """
+
   defstruct nome: nil, numero: nil, cpf: nil, plano: nil
 
   @assinantes %{:prepago => "pre.txt", :pospago => "pos.txt"}
+
+  @doc """
+  Busca para `prepago` e `pospago`, podendo passar o numero e tipo do plano
+
+  ## params:
+
+  - numero: telefone celular
+  - key: plano do cliente, caso vazio sera considerado `:all`
+
+  ## Exemplo:
+
+      iex> Assinante.cadastrar("joca", "123", "123") && Assinante.buscar_assinante("123")
+      %Assinante{cpf: "123", nome: "joca", numero: "123", plano: :prepago}
+  """
 
   def buscar_assinante(numero, key \\ :all), do: buscar(numero, key)
   defp buscar(numero, :all), do: filtro(assinantes(), numero)
@@ -12,6 +32,22 @@ defmodule Assinante do
   def assinantes(), do: assinantes_prepago() ++ assinantes_pospago()
   def assinantes_prepago(), do: read(:prepago)
   def assinantes_pospago(), do: read(:pospago)
+
+  @doc """
+  Cadastro para `prepago` e `pospago`
+
+  ## params:
+
+  - nome: nome do cliente
+  - numero: telefone celular(identificador unico)
+  - cpf: doc do cliente
+  - plano: opcional, caso vazio sera considerado `prepago`
+
+  ## Exemplo:
+
+      iex> Assinante.cadastrar("joca", "123", "123")
+      {:ok, "Assinante joca cadastrado com sucesso!"}
+  """
 
   def cadastrar(nome, numero, cpf, plano \\ :prepago) do
     case buscar_assinante(numero) do
