@@ -18,14 +18,14 @@ defmodule AssinanteTest do
     end
 
     test "criar uma conta prepago" do
-      assert Assinante.cadastrar("zezinho", "123", "321") ==
+      assert Assinante.cadastrar("zezinho", "123", "321", :prepago) ==
                {:ok, "Assinante zezinho cadastrado com sucesso!"}
     end
 
     test "retorna erro ao cadastrar existente" do
-      Assinante.cadastrar("zezinho", "123", "321")
+      Assinante.cadastrar("zezinho", "123", "321", :prepago)
 
-      assert Assinante.cadastrar("zezinho", "123", "321") ==
+      assert Assinante.cadastrar("zezinho", "123", "321", :prepago) ==
                {:error, "Assinante ja existe!"}
     end
   end
@@ -35,19 +35,20 @@ defmodule AssinanteTest do
       Assinante.cadastrar("zezinho", "123", "321", :pospago)
 
       assert Assinante.buscar_assinante("123", :pospago).nome == "zezinho"
+      assert Assinante.buscar_assinante("123", :pospago).plano.__struct__ == Pospago
     end
 
     test "busca prepago" do
-      Assinante.cadastrar("zezinho", "123", "321")
+      Assinante.cadastrar("zezinho", "123", "321", :prepago)
 
-      assert Assinante.buscar_assinante("123", :prepago).nome == "zezinho"
+      assert Assinante.buscar_assinante("123").nome == "zezinho"
     end
   end
 
   describe "delete" do
     test "apaga o cliente" do
-      Assinante.cadastrar("joaozinho", "321", "321")
-      Assinante.cadastrar("zezinho", "123", "321")
+      Assinante.cadastrar("joaozinho", "321", "321", :prepago)
+      Assinante.cadastrar("zezinho", "123", "321", :prepago)
 
       assert Assinante.deletar("123") == {:ok, "Assinante zezinho apagado!"}
     end

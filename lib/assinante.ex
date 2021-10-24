@@ -19,8 +19,8 @@ defmodule Assinante do
 
   ## Exemplo:
 
-      iex> Assinante.cadastrar("joca", "123", "123") && Assinante.buscar_assinante("123")
-      %Assinante{cpf: "123", nome: "joca", numero: "123", plano: :prepago}
+      iex> Assinante.cadastrar("joca", "123", "123", :prepago) && Assinante.buscar_assinante("123")
+      %Assinante{cpf: "123", nome: "joca", numero: "123", plano: %Prepago{creditos: 10, recargas: []}}
   """
 
   def buscar_assinante(numero, key \\ :all), do: buscar(numero, key)
@@ -45,21 +45,33 @@ defmodule Assinante do
 
   ## Exemplo:
 
-      iex> Assinante.cadastrar("joca", "123", "123")
+      iex> Assinante.cadastrar("joca", "123", "123", :prepago)
       {:ok, "Assinante joca cadastrado com sucesso!"}
   """
 
-  def cadastrar(nome, numero, cpf, plano \\ :prepago) do
+  def cadastrar(nome, numero, cpf, :prepago), do: cadastrar(nome, numero, cpf, %Prepago{})
+  def cadastrar(nome, numero, cpf, :pospago), do: cadastrar(nome, numero, cpf, %Pospago{})
+
+  def cadastrar(nome, numero, cpf, plano) do
     case buscar_assinante(numero) do
       nil ->
-        (read(plano) ++ [%__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}])
+        assinante = %__MODULE__{nome: nome, numero: numero, cpf: cpf, plano: plano}
+
+        (read(pega_plano(assinante)) ++ [assinante])
         |> :erlang.term_to_binary()
-        |> write(plano)
+        |> write(pega_plano(assinante))
 
         {:ok, "Assinante #{nome} cadastrado com sucesso!"}
 
       _assinante ->
         {:error, "Assinante ja existe!"}
+    end
+  end
+
+  defp pega_plano(assinante) do
+    case assinante.__struct__ == Prepago do
+      true -> :prepago
+      false -> :pospago
     end
   end
 
