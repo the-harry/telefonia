@@ -20,7 +20,7 @@ defmodule Assinante do
   ## Exemplo:
 
       iex> Assinante.cadastrar("joca", "123", "123", :prepago) && Assinante.buscar_assinante("123")
-      %Assinante{cpf: "123", nome: "joca", numero: "123", plano: %Prepago{creditos: 10, recargas: []}}
+      %Assinante{cpf: "123", nome: "joca", numero: "123", plano: %Prepago{creditos: 0, recargas: []}}
   """
 
   def buscar_assinante(numero, key \\ :all), do: buscar(numero, key)

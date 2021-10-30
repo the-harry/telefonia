@@ -1,7 +1,7 @@
 defmodule Prepago do
   @preco_minuto 1.45
 
-  defstruct creditos: 10, recargas: []
+  defstruct creditos: 0, recargas: []
 
   def fazer_chamada(numero, data, duracao) do
     assinante = Assinante.buscar_assinante(numero, :prepago)
