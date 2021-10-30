@@ -5,7 +5,7 @@ defmodule Assinante do
   A funcao mais usada eh a `cadastrar/4`
   """
 
-  defstruct nome: nil, numero: nil, cpf: nil, plano: nil
+  defstruct nome: nil, numero: nil, cpf: nil, plano: nil, chamadas: []
 
   @assinantes %{:prepago => "pre.txt", :pospago => "pos.txt"}
 
@@ -68,8 +68,24 @@ defmodule Assinante do
     end
   end
 
+  def atualizar(numero, assinante) do
+    {assinante_antigo, nova_lista} = deletar_item(numero)
+
+    case assinante_antigo.plano.__struct__ == assinante.plano.__struct__ do
+      true ->
+        (nova_lista ++ [assinante])
+        |> :erlang.term_to_binary()
+        |> write(pega_plano(assinante))
+
+        {:ok, assinante}
+
+      false ->
+        {:error, "Assinante nao pode alterar o plano."}
+    end
+  end
+
   defp pega_plano(assinante) do
-    case assinante.__struct__ == Prepago do
+    case assinante.plano.__struct__ == Prepago do
       true -> :prepago
       false -> :pospago
     end
@@ -80,15 +96,23 @@ defmodule Assinante do
   end
 
   def deletar(numero) do
+    {assinante, nova_lista} = deletar_item(numero)
+
+    nova_lista
+    |> :erlang.term_to_binary()
+    |> write(assinante.plano)
+
+    {:ok, "Assinante #{assinante.nome} apagado!"}
+  end
+
+  def deletar_item(numero) do
     assinante = buscar_assinante(numero)
 
-    result =
-      assinantes()
+    nova_lista =
+      read(pega_plano(assinante))
       |> List.delete(assinante)
-      |> :erlang.term_to_binary()
-      |> write(assinante.plano)
 
-    {result, "Assinante #{assinante.nome} apagado!"}
+    {assinante, nova_lista}
   end
 
   def read(plano) do

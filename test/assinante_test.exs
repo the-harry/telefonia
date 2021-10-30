@@ -14,7 +14,7 @@ defmodule AssinanteTest do
 
   describe "cadastro de assinantes" do
     test "retorna estrutura de assinante" do
-      assert %Assinante{nome: "teste", numero: "111", cpf: "222", plano: "plano"}.nome == "teste"
+      assert %Assinante{nome: "teste", numero: "111", cpf: "222", plano: :prepago}.nome == "teste"
     end
 
     test "criar uma conta prepago" do
@@ -42,6 +42,7 @@ defmodule AssinanteTest do
       Assinante.cadastrar("zezinho", "123", "321", :prepago)
 
       assert Assinante.buscar_assinante("123").nome == "zezinho"
+      assert Assinante.buscar_assinante("123", :prepago).plano.__struct__ == Prepago
     end
   end
 
