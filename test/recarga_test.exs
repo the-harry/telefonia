@@ -11,6 +11,10 @@ defmodule RecargaTest do
     end)
   end
 
+  test "it defines a struct" do
+    assert %Recarga{data: DateTime.utc_now(), valor: 30}.valor == 30
+  end
+
   test "faz uma recarga" do
     Assinante.cadastrar("zezinho", "123", "321", :prepago)
 
