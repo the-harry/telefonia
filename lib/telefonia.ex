@@ -3,6 +3,15 @@ defmodule Telefonia do
   modulo principal da aplicacao
   """
 
+  @doc """
+  Inicia aplicacao criando os arquivos para salvar os dados
+
+  ##exemplo
+
+      iex> Telefonia.start
+      :ok
+  """
+
   def start do
     File.write("pre.txt", :erlang.term_to_binary([]))
     File.write("pos.txt", :erlang.term_to_binary([]))

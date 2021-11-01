@@ -1,5 +1,6 @@
 defmodule RecargaTest do
   use ExUnit.Case
+  doctest Recarga
 
   setup do
     File.write("pre.txt", :erlang.term_to_binary([]))
