@@ -27,18 +27,16 @@ defmodule Prepago do
     assinante = Assinante.buscar_assinante(numero, :prepago)
     custo = @preco_minuto * duracao
 
-    cond do
-      custo <= assinante.plano.creditos ->
-        plano = assinante.plano
-        plano = %__MODULE__{plano | creditos: plano.creditos - custo}
+    if custo <= assinante.plano.creditos do
+      plano = assinante.plano
+      plano = %__MODULE__{plano | creditos: plano.creditos - custo}
 
-        %Assinante{assinante | plano: plano}
-        |> Chamada.registrar(data, duracao)
+      %Assinante{assinante | plano: plano}
+      |> Chamada.registrar(data, duracao)
 
-        {:ok, "A chamada custou R$#{custo}, e voce tem apenas R$#{plano.creditos}"}
-
-      true ->
-        {:error, "Voce nao tem creditos!"}
+      {:ok, "A chamada custou R$#{custo}, e voce tem apenas R$#{plano.creditos}"}
+    else
+      {:error, "Voce nao tem creditos!"}
     end
   end
 

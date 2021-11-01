@@ -1,4 +1,8 @@
 defmodule Telefonia do
+  @moduledoc """
+  modulo principal da aplicacao
+  """
+
   def start do
     File.write("pre.txt", :erlang.term_to_binary([]))
     File.write("pos.txt", :erlang.term_to_binary([]))

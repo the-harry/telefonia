@@ -1,4 +1,7 @@
 defmodule Recarga do
+  @moduledoc """
+  modulo para gerenciar recargas
+  """
   defstruct data: nil, valor: nil
 
   def nova(data, valor, numero) do

@@ -1,4 +1,8 @@
 defmodule Contas do
+  @moduledoc """
+  Modulo para gerenciamento de faturas
+  """
+
   def imprimir(mes, ano, numero, plano) do
     assinante = Assinante.buscar_assinante(numero, plano)
 
