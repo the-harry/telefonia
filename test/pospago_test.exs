@@ -1,5 +1,6 @@
 defmodule PospagoTest do
   use ExUnit.Case
+  doctest Pospago
 
   setup do
     File.write("pre.txt", :erlang.term_to_binary([]))

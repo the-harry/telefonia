@@ -1,7 +1,27 @@
 defmodule Prepago do
+  @moduledoc """
+  Modulo para clientes que nao pagam um absurdo de maneira direta
+  """
   @preco_minuto 1.45
 
   defstruct creditos: 0, recargas: []
+
+  @doc """
+  registra chamada prepago
+
+  ## params
+  - numero
+  - data
+  - duracao
+
+  ##exemplo
+
+      iex> Telefonia.start
+      ...> Assinante.cadastrar("zezinho", "1234", "321", :prepago)
+      ...> Prepago.fazer_chamada("1234", DateTime.utc_now(), 10)
+
+      {:ok, "A chamada custou R$3, e voce tem apenas R$5"}
+  """
 
   def fazer_chamada(numero, data, duracao) do
     assinante = Assinante.buscar_assinante(numero, :prepago)
