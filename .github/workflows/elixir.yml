@@ -1,0 +1,73 @@
+name: Elixir pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  linter:
+   runs-on: ubuntu-latest
+
+   steps:
+    - uses: actions/checkout@v2
+    - uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
+      with:
+        otp-version: '23.0'
+        elixir-version: '1.12.0'
+
+    - uses: actions/cache@v2
+      env:
+        cache-name: cache-elixir-deps
+      with:
+        path: |
+          deps
+          _build
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+                    ${{ runner.os }}-build-${{ env.cache-name }}-
+                    ${{ runner.os }}-build-
+                    ${{ runner.os }}-
+
+    - name: Run Linter
+      run: |
+        mix deps.get
+        mix format --check-formatted
+        mix credo --strict
+
+  test:
+    runs-on: ubuntu-latest
+    env:
+      MIX_ENV: test
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
+        with:
+          otp-version: '23.0'
+          elixir-version: '1.12.0'
+
+      - uses: actions/cache@v2
+        env:
+          cache-name: cache-elixir-deps
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}-test
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Run specs
+        run: |
+          mix deps.get
+          mix coveralls.html -o coveralls.html
+
+      - name: Publish coveralls report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coveralls_report
+          path: coveralls.html
