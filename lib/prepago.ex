@@ -18,9 +18,9 @@ defmodule Prepago do
 
       iex> Telefonia.start
       ...> Assinante.cadastrar("zezinho", "1234", "321", :prepago)
-      ...> Prepago.fazer_chamada("1234", DateTime.utc_now(), 10)
-
-      {:ok, "A chamada custou R$3, e voce tem apenas R$5"}
+      ...> Recarga.nova(DateTime.utc_now(), 10, "1234")
+      ...> Prepago.fazer_chamada("1234", DateTime.utc_now(), 3)
+      {:ok, "A chamada custou R$4.35, e voce tem apenas R$5.65"}
   """
 
   def fazer_chamada(numero, data, duracao) do
