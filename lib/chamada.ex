@@ -18,7 +18,7 @@ defmodule Chamada do
       iex> Telefonia.start
       ...> Assinante.cadastrar("zezinho", "1234", "321", :pospago)
       ...> assinante = Assinante.buscar_assinante("1234", :pospago)
-      ...> Chamada.registrar(assinante, DateTime.utc_now(), 10)
+      ...> Chamada.registrar(assinante, ~U[2021-10-31 21:50:53.953251Z], 10)
       {:ok,
       %Assinante{
         chamadas: [%Chamada{data: ~U[2021-10-31 21:50:53.953251Z], duracao: 10}],
