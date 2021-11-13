@@ -19,7 +19,6 @@ defmodule Prepago do
       iex> Telefonia.start
       ...> Assinante.cadastrar("zezinho", "1234", "321", :prepago)
       ...> Prepago.fazer_chamada("1234", DateTime.utc_now(), 10)
-
       {:ok, "A chamada custou R$3, e voce tem apenas R$5"}
   """
 

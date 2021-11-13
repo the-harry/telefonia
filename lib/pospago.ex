@@ -20,9 +20,7 @@ defmodule Pospago do
       iex> Telefonia.start
       ...> Assinante.cadastrar("zezinho", "1234", "321", :pospago)
       ...> Pospago.fazer_chamada("1234", DateTime.utc_now(), 10)
-
       {:ok, "Chamada de 10min efetuada."}
-      isso devia quebrar o teste ne?
   """
 
   def fazer_chamada(numero, data, duracao) do
@@ -45,17 +43,16 @@ defmodule Pospago do
       iex> Telefonia.start
       ...> Assinante.cadastrar("zezinho", "1234", "321", :pospago)
       ...> assinante = Assinante.buscar_assinante("1234", :pospago)
-      ...> Chamada.registrar(assinante, DateTime.utc_now(), 10)
+      ...> Chamada.registrar(assinante, ~U[2021-11-01 15:03:47.738740Z], 10)
       ...> Pospago.imprimir_conta(DateTime.utc_now().month, DateTime.utc_now().year, "1234")
-
       %Assinante{
-        chamadas: [
-          %Chamada{data: ~U[2021-11-01 15:03:47.738740Z], duracao: 10}
-        ],
-        cpf: "321",
-        nome: "zezinho",
-        numero: "1234",
-        plano: %Pospago{valor: 24.0}
+      chamadas: [
+        %Chamada{data: ~U[2021-11-01 15:03:47.738740Z], duracao: 10}
+      ],
+      cpf: "321",
+      nome: "zezinho",
+      numero: "1234",
+      plano: %Pospago{valor: 24.0}
       }
   """
 
